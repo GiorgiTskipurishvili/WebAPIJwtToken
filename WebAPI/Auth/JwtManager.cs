@@ -43,39 +43,4 @@ namespace WebAPI.Auth
 
 
 
-    //public class JwtManager 
-    //{
-    //    private readonly IConfiguration _configuration;
-    //    private readonly string _key;
-
-    //    public JwtManager(IConfiguration configuration)
-    //    {
-    //        _configuration = configuration;
-    //        _key = _configuration["JWT:Key"];
-    //        if (string.IsNullOrEmpty(_key))
-    //        {
-    //            throw new ArgumentNullException("JWT Key is missing from configuration.");
-    //        }
-    //    }
-
-    //    public string Authenticate(string username, string password)
-    //    {
-    //        if (!(username == "admin" && password == "admin")) // Replace this with proper authentication logic
-    //            return null;
-
-    //        var tokenHandler = new JwtSecurityTokenHandler();
-    //        var key = Encoding.ASCII.GetBytes(_key);
-    //        var tokenDescriptor = new SecurityTokenDescriptor
-    //        {
-    //            Expires = DateTime.UtcNow.AddDays(1),
-    //            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-    //        };
-
-    //        var token = tokenHandler.CreateToken(tokenDescriptor);
-    //        return tokenHandler.WriteToken(token);
-    //    }
-    //}
-
-
-
 }
