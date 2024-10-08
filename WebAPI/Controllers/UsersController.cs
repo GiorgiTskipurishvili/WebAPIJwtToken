@@ -38,12 +38,35 @@ namespace WebAPI.Controllers
         [HttpGet("{username}")]
         public IActionResult GetUserByUsername(string username)
         {
-            PKG_USER userPKG = new PKG_USER();
-            User user = userPKG.getUserByUsername(username);
 
-            return Ok(user);
+
+            try
+            {
+                PKG_USER userPKG = new PKG_USER();
+                User user = userPKG.getUserByUsername(username);
+                if (user== null)
+                {
+                    return NotFound(new { message = "user not found" });
+                }
+                return Ok(user);
+            }catch(Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while fetching the user", details = ex.Message });
+            }
+
+
+
         }
 
+
+        //[HttpDelete("{id}")]
+        //public void DeleteUser(int id)
+        //{
+        //    PKG_USER package = new PKG_USER();
+        //    User user = new User();
+        //    user.ID = id;
+        //    package.delete_user(user);
+        //}
 
     }
 }

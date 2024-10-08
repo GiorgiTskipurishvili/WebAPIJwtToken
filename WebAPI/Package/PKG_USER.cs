@@ -20,6 +20,7 @@ namespace WebAPI.Package
             cmd.Parameters.Add("p_email", OracleDbType.Varchar2).Value = user.Email;
             cmd.Parameters.Add("p_username", OracleDbType.Varchar2).Value = user.Username;
             cmd.Parameters.Add("p_password", OracleDbType.Varchar2).Value = user.Password;
+            cmd.Parameters.Add("p_role", OracleDbType.Int32).Value = user.Role;
 
             cmd.ExecuteNonQuery();
 
@@ -53,7 +54,9 @@ namespace WebAPI.Package
 
                     Email = reader["email"].ToString(),
                     Username = reader["username"].ToString(),
-                    Password = reader["password"].ToString()
+                    Password = reader["password"].ToString(),
+                    Role = (Role)int.Parse(reader["role"].ToString())
+
                 };
             }
 
@@ -63,6 +66,43 @@ namespace WebAPI.Package
 
         }
 
+
+
+        //public List<User> get_users()
+        //{
+        //    List<User> users = new List<User>();
+
+        //    using (OracleConnection conn = new OracleConnection(ConnStr))
+        //    {
+        //        conn.Open();
+
+        //        using (OracleCommand cmd = new OracleCommand("olerning.PKG_GIORGITSK_USERS.get_users", conn))
+        //        {
+        //            cmd.CommandType = CommandType.StoredProcedure;
+
+        //            cmd.Parameters.Add("p_result", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+        //            using (OracleDataReader reader = cmd.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    User user = new User()
+        //                    {
+        //                        ID = int.Parse(reader["ID"].ToString()),
+        //                        Email = reader["email"].ToString(),
+        //                        Username = reader["username"].ToString(),
+        //                        Password = reader["password"].ToString(),
+        //                        Role = (Role)int.Parse(reader["role"].ToString())  // Convert role to enum
+        //                    };
+
+        //                    users.Add(user);
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    return users;
+        //}
 
 
 
@@ -133,6 +173,26 @@ namespace WebAPI.Package
         //    return user;
 
 
+        //}
+
+
+        //public void delete_user(User user)
+        //{
+        //    OracleConnection conn = new OracleConnection();
+        //    conn.ConnectionString = ConnStr;
+
+        //    conn.Open();
+
+        //    OracleCommand cmd = new OracleCommand();
+        //    cmd.Connection = conn;
+        //    cmd.CommandText = "olerning.PKG_GIORGITSK_USERS.delete_user";
+        //    cmd.CommandType = CommandType.StoredProcedure;
+
+        //    cmd.Parameters.Add("p_id", OracleDbType.Int32).Value = user.ID;
+
+        //    cmd.ExecuteNonQuery();
+
+        //    conn.Close();
         //}
 
     }

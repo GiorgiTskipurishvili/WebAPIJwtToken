@@ -34,26 +34,56 @@ namespace WebAPI.Controllers
             PKG_EMP package = new PKG_EMP();
             package.update_employee(employee);
         }
+        //[HttpPut("{id}")]
+        //public IActionResult UpdateEmployeeById(int id, [FromBody] Employee employee)
+        //{
+        //    if (id != employee.ID)
+        //    {
+        //        return BadRequest("Employee ID mismatch");
+        //    }
+
+        //    try
+        //    {
+        //        PKG_EMP package = new PKG_EMP();
+        //        package.update_employee(employee);
+
+        //        return Ok("Employee updated successfully");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
+
+
         [HttpPut("{id}")]
-        public IActionResult UpdateEmployeeById(int id, [FromBody] Employee employee)
+        public IActionResult UpdateEmployee(int id, [FromBody] Employee employee)
         {
+            //PKG_EMP package = new PKG_EMP();
+            //package.update_employee(employee);
+            //return Ok(new { message = "Employee updated successfully" });
+
+
             if (id != employee.ID)
             {
-                return BadRequest("Employee ID mismatch");
+                return BadRequest(new { message = "Employee ID mismatch" });
             }
 
             try
             {
+                // Assuming your package logic handles employee update correctly
                 PKG_EMP package = new PKG_EMP();
                 package.update_employee(employee);
 
-                return Ok("Employee updated successfully");
+                return Ok(new { message = "Employee updated successfully" });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                // Log the exception and return a failure message
+                return StatusCode(500, new { message = "Error updating employee", error = ex.Message });
             }
         }
+
 
 
 
