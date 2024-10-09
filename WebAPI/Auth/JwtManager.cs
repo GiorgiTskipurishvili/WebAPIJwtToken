@@ -9,7 +9,7 @@ namespace WebAPI.Auth
 
     public interface IJwtManager
     {
-        Token GetToken(Login user);
+        Token GetToken(User user);
     }
     public class JwtManager : IJwtManager
     {
@@ -20,16 +20,24 @@ namespace WebAPI.Auth
             _configuration = configuration;
         }
 
-        public Token GetToken(Login user)
+        public Token GetToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+
+            //
+            //var userRole = user.Username == "admin" ? "Admin" : "User";
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim("username",user.Username, ClaimTypes.Name),
-                    new Claim("password",user.Password, ClaimTypes.NameIdentifier)
+                    new Claim("password",user.Password, ClaimTypes.NameIdentifier),
+                    new Claim("role",user.Role.ToString(),ClaimTypes.Role)
+                    //
+                    //new Claim(ClaimTypes.Name, user.Username),
+                    //new Claim(ClaimTypes.Role,userRole)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256)
@@ -41,6 +49,11 @@ namespace WebAPI.Auth
 
     }
 
+
+    public class Token
+    {
+        public string? AccessToken { get; set; }
+    }
 
 
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebAPI.Model;
 using WebAPI.Package;
 
@@ -17,6 +18,21 @@ namespace WebAPI.Controllers
         //    return list_users;
         //}
 
+        [Authorize(Roles ="Admin")]
+        [HttpGet]
+        public IActionResult GetUsers()
+        {
+            try
+            {
+                PKG_USER package = new PKG_USER();
+                List<User> users = package.get_users();
+                return Ok(users);  
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while fetching the users", details = ex.Message });
+            }
+        }
 
         [HttpPost]
         public void SaveUser(User user)
@@ -35,6 +51,7 @@ namespace WebAPI.Controllers
         //    return package.get_user_by_id(user);
         //}
 
+        [Authorize(Roles = "Admin,User")]
         [HttpGet("{username}")]
         public IActionResult GetUserByUsername(string username)
         {
@@ -67,6 +84,26 @@ namespace WebAPI.Controllers
         //    user.ID = id;
         //    package.delete_user(user);
         //}
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUser(int id)
+        {
+            try
+            {
+                PKG_USER package = new PKG_USER();
+                package.delete_user(id);
+
+                return Ok(new { message = "User deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while deleting the user", details = ex.Message });
+            }
+        }
+
+
+
 
     }
 }

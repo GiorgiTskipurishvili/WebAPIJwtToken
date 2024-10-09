@@ -20,7 +20,8 @@ namespace WebAPI.Package
             cmd.Parameters.Add("p_email", OracleDbType.Varchar2).Value = user.Email;
             cmd.Parameters.Add("p_username", OracleDbType.Varchar2).Value = user.Username;
             cmd.Parameters.Add("p_password", OracleDbType.Varchar2).Value = user.Password;
-            cmd.Parameters.Add("p_role", OracleDbType.Int32).Value = user.Role;
+            //cmd.Parameters.Add("p_role", OracleDbType.Int32).Value = user.Role;
+            cmd.Parameters.Add("p_role", OracleDbType.Int32).Value = (int)user.Role;
 
             cmd.ExecuteNonQuery();
 
@@ -103,6 +104,44 @@ namespace WebAPI.Package
 
         //    return users;
         //}
+
+        public List<User> get_users()
+        {
+            List<User> users = new List<User>(); 
+
+            using (OracleConnection conn = new OracleConnection(ConnStr))
+            {
+                conn.Open();
+
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = conn;
+                    cmd.CommandText = "olerning.PKG_GIORGITSK_USERS.get_users";  // Stored procedure to get all users
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("p_result", OracleDbType.RefCursor).Direction = ParameterDirection.Output;  // Output parameter to receive cursor
+
+                    using (OracleDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            User user = new User()
+                            {
+                                ID = Convert.ToInt32(reader["id"]),
+                                Email = reader["email"].ToString(),
+                                Username = reader["username"].ToString(),
+                                Password = reader["password"].ToString(),
+                                Role = (Role)Convert.ToInt32(reader["role"])  // Convert role (0 or 1) to Role enum
+                            };
+
+                            users.Add(user); 
+                        }
+                    }
+                }
+            }
+
+            return users; 
+        }
 
 
 
@@ -194,6 +233,27 @@ namespace WebAPI.Package
 
         //    conn.Close();
         //}
+
+
+        public void delete_user(int id)
+        {
+            using (OracleConnection conn = new OracleConnection(ConnStr))
+            {
+                conn.Open();
+
+                using (OracleCommand cmd = new OracleCommand())
+                {
+                    cmd.Connection = conn;
+                    cmd.CommandText = "olerning.PKG_GIORGITSK_USERS.delete_user";  
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("p_id", OracleDbType.Int32).Value = id;
+
+                    cmd.ExecuteNonQuery(); 
+                }
+            }
+        }
+
 
     }
 }

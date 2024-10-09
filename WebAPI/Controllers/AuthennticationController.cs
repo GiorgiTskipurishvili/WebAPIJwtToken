@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
             User existingUser = package.getUserByUsername(user.Username);
             if (existingUser != null && existingUser.Password == user.Password)
             {
-                var token = jwtManager.GetToken(user);
+                var token = jwtManager.GetToken(existingUser);
                 return Ok(token);
             }
             return Unauthorized(new { message = "Invalid credentials" });
